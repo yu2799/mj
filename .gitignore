@@ -14,7 +14,10 @@ dist-ssr
 
 # Editor directories and files
 .vscode/*
+<<<<<<< HEAD
 !.vscode/settings.json
+=======
+>>>>>>> 7caf2ca (first commit)
 !.vscode/extensions.json
 .idea
 .DS_Store

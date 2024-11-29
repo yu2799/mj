@@ -13,9 +13,13 @@
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
     "@mui/material": "^6.1.9",
+<<<<<<< HEAD
     "@supabase/supabase-js": "^2.46.2",
     "d3": "^7.9.0",
     "firebase": "^11.0.2",
+=======
+    "d3": "^7.9.0",
+>>>>>>> 7caf2ca (first commit)
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router": "^7.0.1"
