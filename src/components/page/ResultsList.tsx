@@ -2,19 +2,13 @@ import { useEffect, useState } from "react";
 import { getRecords } from "../../api/getRecords";
 
 const ResultsListPage = (): JSX.Element => {
-  const [data, setData] = useState([]);
+  const [, setData] = useState<Array<object>>([]);
+
   useEffect(() => {
-    getRecords().then(setData);
+    getRecords().then((res) => setData(res));
   }, []);
 
-  getRecords();
-
-  return (
-    <div>
-      結果の一覧を見るページ
-      {data && data.map(({ point }, idx) => <div key={idx}>{point}</div>)}
-    </div>
-  );
+  return <div>結果の一覧を見るページ</div>;
 };
 
 export default ResultsListPage;

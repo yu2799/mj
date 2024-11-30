@@ -27,15 +27,14 @@ export const Login = () => {
     setLoading(true);
 
     try {
-      const {
-        data: { session },
-        error: signInError,
-      } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
       if (signInError) throw signInError;
-      setAuth(session);
+      const user = data?.session?.user;
+      if (user) setAuth(user);
 
       navigate("/home");
     } catch (error) {
