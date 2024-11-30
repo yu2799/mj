@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RecoilRoot } from "recoil";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import { CssBaseline } from "@mui/material";
 import { PrivateRoute } from "./components/router/PrivateRoute";
 import MahjongScoreBoard from "./components/page/MahjongScoreBoard";
@@ -25,6 +25,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/results" element={<ResultsListPage />} />
             </Route>
           </Route>
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>
