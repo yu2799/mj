@@ -11,24 +11,43 @@ import {
   FormControlLabel,
   Button,
   Typography,
+  Box,
 } from "@mui/material";
 import { useMahjongScore } from "../../utils/useMahjongScore";
 
 const MahjongScoreBoard = (): JSX.Element => {
   const {
+    date,
+    setDate,
     playerNames,
     rounds,
     results,
+    tips,
+    handleChipChange,
+    handleFourthChipFocus,
     addRound,
     handleNameChange,
     handleBaseScoreChange,
     handleYakitoriChange,
     handleYakumanChange,
     handleFourthPlayerFocus,
+    saveData,
   } = useMahjongScore();
 
   return (
     <Container>
+      <TextField
+        label="日付"
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+          },
+        }}
+        style={{ marginBottom: "20px" }}
+      />
       <Table>
         <TableHead>
           <TableRow>
@@ -74,9 +93,10 @@ const MahjongScoreBoard = (): JSX.Element => {
                             ? () => handleFourthPlayerFocus(roundIndex)
                             : undefined
                         }
-                        inputProps={{
-                          maxLength: 3,
-                          style: { textAlign: "center" },
+                        slotProps={{
+                          input: {
+                            style: { textAlign: "center" },
+                          },
                         }}
                         style={{ width: "40%" }}
                       />
@@ -96,7 +116,7 @@ const MahjongScoreBoard = (): JSX.Element => {
                           color="primary"
                         />
                       }
-                      label="焼き鳥"
+                      label="鳥"
                     />
                     <FormControlLabel
                       control={
@@ -112,7 +132,7 @@ const MahjongScoreBoard = (): JSX.Element => {
                           color="secondary"
                         />
                       }
-                      label="役満"
+                      label="役"
                     />
                   </TableCell>
                 ))}
@@ -126,7 +146,7 @@ const MahjongScoreBoard = (): JSX.Element => {
                         variant="body1"
                         style={{
                           color:
-                            score > 0 ? "red" : score < 0 ? "blue" : "black",
+                            score > 0 ? "blue" : score < 0 ? "red" : "black",
                         }}
                       >
                         {score}
@@ -150,13 +170,32 @@ const MahjongScoreBoard = (): JSX.Element => {
             </TableCell>
           </TableRow>
           <TableRow>
+            <TableCell align="center">チップ</TableCell>
+            {tips.map((tip, index) => (
+              <TableCell key={index} align="center">
+                <TextField
+                  type="number"
+                  value={tip}
+                  onChange={(e) => handleChipChange(index, e.target.value)}
+                  onFocus={index === 3 ? handleFourthChipFocus : undefined}
+                  slotProps={{
+                    htmlInput: {
+                      style: { textAlign: "center" },
+                    },
+                  }}
+                  style={{ width: "60px" }}
+                />
+              </TableCell>
+            ))}
+          </TableRow>
+          <TableRow>
             <TableCell align="center">合計スコア</TableCell>
             {results.map((score, index) => (
               <TableCell key={index} align="center">
                 <Typography
                   variant="body1"
                   style={{
-                    color: score > 0 ? "red" : score < 0 ? "blue" : "black",
+                    color: score > 0 ? "blue" : score < 0 ? "red" : "black",
                   }}
                 >
                   {score}
@@ -164,8 +203,33 @@ const MahjongScoreBoard = (): JSX.Element => {
               </TableCell>
             ))}
           </TableRow>
+          <TableRow>
+            <TableCell align="center">ポイント</TableCell>
+            {results.map((score, index) => (
+              <TableCell key={index} align="center">
+                <Typography
+                  variant="body1"
+                  style={{
+                    color: score > 0 ? "blue" : score < 0 ? "red" : "black",
+                  }}
+                >
+                  {score * 50 + Number(tips[index]) * 100}P
+                </Typography>
+              </TableCell>
+            ))}
+          </TableRow>
         </TableBody>
       </Table>
+      <Box display="flex" alignItems="right" justifyContent="right">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={saveData}
+          style={{ marginTop: "20px" }}
+        >
+          保存
+        </Button>
+      </Box>
     </Container>
   );
 };

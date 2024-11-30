@@ -10,6 +10,7 @@ export interface RoundData {
 }
 
 export function useMahjongScore() {
+  const [date, setDate] = useState<string>("");
   const [playerNames, setPlayerNames] = useState<string[]>(["", "", "", ""]);
   const [rounds, setRounds] = useState<RoundData[]>([
     {
@@ -22,6 +23,7 @@ export function useMahjongScore() {
   ]);
 
   const [results, setResults] = useState<number[]>([0, 0, 0, 0]);
+  const [tips, setTips] = useState<string[]>(["0", "0", "0", "0"]);
 
   const addRound = (): void => {
     setRounds([
@@ -97,6 +99,27 @@ export function useMahjongScore() {
     recalculateScores(newRounds);
   };
 
+  const handleChipChange = (playerIndex: number, value: string): void => {
+    const newChips = [...tips];
+    newChips[playerIndex] = value;
+    setTips(newChips);
+  };
+
+  const handleFourthChipFocus = (): void => {
+    const chipsNumbers = tips.map((tip) => (tip !== "" ? Number(tip) : NaN));
+    const filledChips = chipsNumbers.filter(
+      (chip, index) => index !== 3 && !isNaN(chip),
+    );
+
+    if (filledChips.length === 3) {
+      const total = filledChips.reduce((sum, chip) => sum + chip, 0);
+      const fourthChip = -total;
+      const newChips = [...tips];
+      newChips[3] = fourthChip.toString();
+      setTips(newChips);
+    }
+  };
+
   const recalculateScores = (roundsData: RoundData[]) => {
     const newRounds = [...roundsData];
 
@@ -144,16 +167,46 @@ export function useMahjongScore() {
     setResults(cumulativeResults);
   };
 
+  const saveData = () => {
+    const participant = playerNames.map((name, index) => ({
+      userId: name,
+      data: rounds.map((round) => ({
+        soten: Number(round.baseScores[index]) * 100,
+        yakuman: round.yakumanFlags[index],
+        yakitori: round.yakitoriFlags[index],
+      })),
+      tip: Number(tips[index]),
+    }));
+
+    const dataToSave = {
+      id: Date.now(),
+      date: date,
+      participant: participant,
+    };
+
+    const existingData = localStorage.getItem("mahjongResults");
+    const mahjongResults = existingData ? JSON.parse(existingData) : [];
+    mahjongResults.push(dataToSave);
+    localStorage.setItem("mahjongResults", JSON.stringify(mahjongResults));
+
+    alert("データを保存しました。");
+  };
+
   return {
+    date,
+    setDate,
     playerNames,
     rounds,
     results,
+    tips,
+    handleChipChange,
+    handleFourthChipFocus,
     addRound,
     handleNameChange,
     handleBaseScoreChange,
     handleYakitoriChange,
     handleYakumanChange,
     handleFourthPlayerFocus,
-    recalculateScores,
+    saveData,
   };
 }
