@@ -1,10 +1,10 @@
 import { SyntheticEvent, useState } from "react";
+import { useNavigate, useLocation } from "react-router";
 import { BottomNavigation, BottomNavigationAction } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import ListIcon from "@mui/icons-material/List";
-import { useNavigate, useLocation } from "react-router";
 
-const Footer = (): JSX.Element => {
+export const Footer = (): JSX.Element => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,5 +50,3 @@ const Footer = (): JSX.Element => {
     </BottomNavigation>
   );
 };
-
-export default Footer;

@@ -1,0 +1,34 @@
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100dvh;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+
+  padding: 24px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__btn {
+    align-self: center;
+  }
+}
