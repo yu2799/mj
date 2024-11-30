@@ -1,22 +1,33 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router";
-import { Home } from "./components/page/Home";
-import MahjongScoreBoard from "./components/page/MahjongScoreBoard";
-import ResultsList from "./components/page/ResultsList";
-import Footer from "./components/page/Footer";
+import { RecoilRoot } from "recoil";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router";
 import { CssBaseline } from "@mui/material";
+import { PrivateRoute } from "./components/router/PrivateRoute";
+import MahjongScoreBoard from "./components/page/MahjongScoreBoard";
+import ResultsListPage from "./components/page/ResultsList";
+import Login from "./components/page/Login";
+import { PublicRoute } from "./components/router/PublicRoute";
+import { RouteGuard } from "./components/router/RouteGard";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CssBaseline />
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/input" element={<MahjongScoreBoard />} />
-        <Route path="/results" element={<ResultsList />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<RouteGuard />}>
+            <Route element={<PublicRoute />}>
+              <Route path="/login" element={<Login />} />
+            </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path="/input" element={<MahjongScoreBoard />} />
+              <Route path="/results" element={<ResultsListPage />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </RecoilRoot>
   </StrictMode>,
 );
