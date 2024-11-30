@@ -11,6 +11,7 @@ export interface Participant {
 }
 
 export interface GameResult {
+  id: number;
   date: string;
   participant: Participant[];
 }

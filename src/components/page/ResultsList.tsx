@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Typography,
@@ -8,13 +8,18 @@ import {
   Divider,
 } from "@mui/material";
 import { useNavigate } from "react-router";
-import { dummyData } from "../../data/dammyData";
 import { GameResult } from "../../types/types";
 
 const ResultList = () => {
   const navigate = useNavigate();
 
-  const dataList: GameResult[] = dummyData;
+  const [dataList, setDataList] = useState<GameResult[]>([]);
+
+  useEffect(() => {
+    const existingData = localStorage.getItem("mahjongResults");
+    const mahjongResults = existingData ? JSON.parse(existingData) : [];
+    setDataList(mahjongResults);
+  }, []);
 
   return (
     <Container>
@@ -24,7 +29,10 @@ const ResultList = () => {
       <List>
         {dataList.map((data, index) => (
           <React.Fragment key={index}>
-            <ListItem component="button" onClick={() => navigate(`/results/${index}`)}>
+            <ListItem
+              component="button"
+              onClick={() => navigate(`/results/${data.id}`)}
+            >
               <ListItemText primary={data.date} />
             </ListItem>
             <Divider />
