@@ -1,5 +1,5 @@
 import styles from "./Home.module.scss";
-import MahjongScoreBoard from "./MahjongScoreBoard";
+import MahjongScoreBoard from "../MahjongScoreBoard";
 
 export const Home = () => {
   return (
