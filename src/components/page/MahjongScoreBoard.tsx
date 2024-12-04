@@ -84,7 +84,7 @@ const MahjongScoreBoard = (): JSX.Element => {
                   align="center"
                   sx={{ width: isMobile ? "50px" : "auto" }}
                 ></TableCell>
-                {playerNames.map((name, index) => (
+                {playerNames.map((_name, index) => (
                   <TableCell key={index} align="center">
                     <TextField
                       value={playerNames[index] || availableNames[index]}
