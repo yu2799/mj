@@ -10,6 +10,7 @@ import ResultDetail from "./components/page/ResultDetail";
 import Login from "./components/page/Login";
 import { PublicRoute } from "./components/router/PublicRoute";
 import { RouteGuard } from "./components/router/RouteGard";
+import { Ranking } from "./components/page/Ranking";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -25,6 +26,7 @@ createRoot(document.getElementById("root")!).render(
               <Route path="/input" element={<MahjongScoreBoard />} />
               <Route path="/results" element={<ResultsList />} />
               <Route path="/results/:id" element={<ResultDetail />} />
+              <Route path="ranking" element={<Ranking />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/login" replace />} />

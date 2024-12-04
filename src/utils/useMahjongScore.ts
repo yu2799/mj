@@ -9,9 +9,22 @@ export interface RoundData {
   finalScores: number[];
 }
 
-export function useMahjongScore() {
-  const [date, setDate] = useState<string>("");
-  const [playerNames, setPlayerNames] = useState<string[]>(["", "", "", ""]);
+const getTodayDate = (): string => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+export const useMahjongScore = () => {
+  const [date, setDate] = useState<string>(getTodayDate());
+  const [playerNames, setPlayerNames] = useState<string[]>([
+    "oden",
+    "longpuffer",
+    "t_taiki",
+    "maru",
+  ]);
   const [rounds, setRounds] = useState<RoundData[]>([
     {
       baseScores: ["", "", "", ""],
@@ -23,7 +36,11 @@ export function useMahjongScore() {
   ]);
 
   const [results, setResults] = useState<number[]>([0, 0, 0, 0]);
-  const [tips, setTips] = useState<string[]>(["0", "0", "0", "0"]);
+  const [tips, setTips] = useState<string[]>(["", "", "", ""]);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   const addRound = (): void => {
     setRounds([
@@ -168,15 +185,39 @@ export function useMahjongScore() {
   };
 
   const saveData = () => {
-    const participant = playerNames.map((name, index) => ({
-      userId: name,
-      data: rounds.map((round) => ({
-        soten: Number(round.baseScores[index]) * 100,
-        yakuman: round.yakumanFlags[index],
-        yakitori: round.yakitoriFlags[index],
-      })),
-      tip: Number(tips[index]),
-    }));
+    // 日付が入力されていない場合の警告
+    if (!date) {
+      setAlertMessage("日付を入力してください");
+      setShowAlert(true);
+      return;
+    }
+
+    // プレイヤー名が入力されていない場合の警告
+    const emptyNames = playerNames.filter((name) => name === "");
+    if (emptyNames.length > 0) {
+      setAlertMessage("すべてのプレイヤーの名前を入力してください");
+      setShowAlert(true);
+      return;
+    }
+    const participant = playerNames.map((name, index) => {
+      const totalScore = rounds.reduce((sum, round) => {
+        if (round.isComplete) {
+          return sum + round.finalScores[index];
+        }
+        return sum;
+      }, 0);
+
+      return {
+        userId: name,
+        data: rounds.map((round) => ({
+          soten: Number(round.baseScores[index]) * 100,
+          yakuman: round.yakumanFlags[index],
+          yakitori: round.yakitoriFlags[index],
+        })),
+        tip: Number(tips[index]),
+        totalScore,
+      };
+    });
 
     const dataToSave = {
       id: Date.now(),
@@ -189,7 +230,8 @@ export function useMahjongScore() {
     mahjongResults.push(dataToSave);
     localStorage.setItem("mahjongResults", JSON.stringify(mahjongResults));
 
-    alert("データを保存しました。");
+    setSuccessMessage("データが正常に保存されました！");
+    setShowSuccess(true);
   };
 
   return {
@@ -208,5 +250,11 @@ export function useMahjongScore() {
     handleYakumanChange,
     handleFourthPlayerFocus,
     saveData,
+    alertMessage,
+    showAlert,
+    setShowAlert,
+    successMessage,
+    showSuccess,
+    setShowSuccess,
   };
-}
+};
